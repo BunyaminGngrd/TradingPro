@@ -74,7 +74,6 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
             histogram.add(macdLine.get(i + longTermPeriod - 1) - signalLine.get(i));
         }
 
-        // Sonuçları yazdır
         response.setMacdLine(macdLine);
         response.setSignalLine(signalLine);
         response.setHistogram(histogram);
