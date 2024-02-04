@@ -57,7 +57,7 @@ public class CurrencyToAllServiceImpl implements ICurrencyToAllService {
             currencyToAllRequest.setAmount(convertToDesiredCurrencyRequest.getAmount());
             CurrencyToAllResponseDTO currencyToAllResponseDTO = currencyToAll(currencyToAllRequest);
 
-            List<CurrencyToAllResultData> resultDataList = currencyToAllResponseDTO.getResult().getResultData();
+            List<CurrencyToAllResultData> resultDataList = currencyToAllResponseDTO.getResult().getData();
 
             CurrencyToAllResultData desiredResult = resultDataList.stream()
                     .filter(currency -> currency.getCode().equals(convertToDesiredCurrencyRequest.getDesiredCurrency()))

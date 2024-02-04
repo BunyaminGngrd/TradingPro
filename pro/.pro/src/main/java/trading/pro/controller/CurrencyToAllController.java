@@ -3,9 +3,7 @@ package trading.pro.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import trading.pro.dto.*;
 import trading.pro.service.ICurrencyToAllService;
 
@@ -19,8 +17,8 @@ public class CurrencyToAllController {
         this.currencyToAllService = currencyToAllService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<CurrencyToAllResponseDTO> currencyToAll(CurrencyToAllRequest currencyToAllRequest) {
+    @PostMapping("/all")
+    public ResponseEntity<CurrencyToAllResponseDTO> currencyToAll(@RequestBody CurrencyToAllRequest currencyToAllRequest) {
         try {
             CurrencyToAllResponseDTO responseDTO = currencyToAllService.currencyToAll(currencyToAllRequest);
             return ResponseEntity.ok(responseDTO);
@@ -29,8 +27,8 @@ public class CurrencyToAllController {
         }
     }
 
-    @GetMapping("/desired")
-    public ResponseEntity<ConvertToDesiredCurrencyResponse> currencyToDesired(ConvertToDesiredCurrencyRequest convertToDesiredCurrencyRequest) {
+    @PostMapping("/desired")
+    public ResponseEntity<ConvertToDesiredCurrencyResponse> currencyToDesired(@RequestBody ConvertToDesiredCurrencyRequest convertToDesiredCurrencyRequest) {
         try {
             ConvertToDesiredCurrencyResponse responseDTO = currencyToAllService.convertToDesiredCurrency(convertToDesiredCurrencyRequest);
             return ResponseEntity.ok(responseDTO);

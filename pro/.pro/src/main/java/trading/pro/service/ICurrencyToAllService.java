@@ -6,5 +6,5 @@ import trading.pro.dto.*;
 public interface ICurrencyToAllService {
     CurrencyToAllResponseDTO currencyToAll(CurrencyToAllRequest currencyToAllRequest);
     ConvertToDesiredCurrencyResponse convertToDesiredCurrency(ConvertToDesiredCurrencyRequest convertToDesiredCurrencyRequest);
-    AllCurrencyResponse allCurrency() throws UnirestException;
+    AllCurrencyResponse allCurrency();
 }
