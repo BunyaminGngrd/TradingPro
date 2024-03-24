@@ -50,10 +50,10 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
 
             if (shortTermResponse.getResponseCode().equals("200") && middleTermResponse.getResponseCode().equals("200") && longTermResponse.getResponseCode().equals("200")){
                 strategyResponse.setStrategyResultMessage(shortTermResponse.getResponseMessage());
-                strategyResponse.setBuySignal(shortTermResponse.getResponseCode().equals("200"));
+                strategyResponse.setBuySignal(true);
             } else {
                 strategyResponse.setStrategyResultMessage("NO SIGNAL");
-                strategyResponse.setBuySignal(shortTermResponse.getResponseCode().equals("500"));
+                strategyResponse.setBuySignal(false);
             }
 
             strategyResponse.setStockCode(stockCode);
