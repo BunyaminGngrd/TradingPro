@@ -15,4 +15,7 @@ public interface LiveDataRepository extends JpaRepository<LiveDataEntity, Long> 
 
 
     List<LiveDataEntity> findByCodeAndDateAfter(String code, String date);
+
+    @Query("SELECT DISTINCT e.code FROM liveData e")
+    List<String> findAllDistinctCodes();
 }

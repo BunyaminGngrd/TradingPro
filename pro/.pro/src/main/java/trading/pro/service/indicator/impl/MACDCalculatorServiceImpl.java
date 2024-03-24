@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import trading.pro.dto.MacdCalculateResponse;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.repository.LiveDataRepository;
+import trading.pro.service.IBaseService;
 import trading.pro.service.indicator.IEMACalculatorService;
 import trading.pro.service.indicator.IMACDCalculatorService;
 
@@ -15,12 +16,14 @@ import java.util.List;
 public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
     private final LiveDataRepository liveDataRepository;
     private final IEMACalculatorService emaCalculatorService;
+    private final IBaseService baseService;
 
     @Autowired
     public MACDCalculatorServiceImpl(LiveDataRepository liveDataRepository,
-                                     IEMACalculatorService emaCalculatorService) {
+                                     IEMACalculatorService emaCalculatorService, IBaseService baseService) {
         this.liveDataRepository = liveDataRepository;
         this.emaCalculatorService = emaCalculatorService;
+        this.baseService = baseService;
     }
 
     @Override
@@ -34,18 +37,10 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
         }
 
         // Fiyatları içeren liste
-        List<Float> closingPrices = extractClosingPrices(stockData);
+        List<Float> closingPrices = this.baseService.extractClosingPrices(stockData);
 
         // MACD hesapla
         return macdCalculator(closingPrices);
-    }
-
-    private List<Float> extractClosingPrices(List<LiveDataEntity> stockData) {
-        List<Float> closingPrices = new ArrayList<>();
-        for (LiveDataEntity data : stockData) {
-            closingPrices.add(data.getLastPrice());
-        }
-        return closingPrices;
     }
 
     public MacdCalculateResponse macdCalculator(List<Float> closingPrices) {
