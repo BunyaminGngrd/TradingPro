@@ -4,20 +4,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class CurrencyToAllResult {
     private String base;
-    private String lastUpdated;
-    private List<CurrencyToAllResultData> resultData;
+    private String lastupdate;
+    private List<CurrencyToAllResultData> data;
 
     @JsonCreator
     public CurrencyToAllResult(@JsonProperty("base") String base,
-                               @JsonProperty("lastUpdated") String lastUpdated,
-                               @JsonProperty("resultData") List<CurrencyToAllResultData> resultData) {
+                               @JsonProperty("lastupdate") String lastupdate,
+                               @JsonProperty("data") List<CurrencyToAllResultData> data) {
         this.base = base;
-        this.lastUpdated = lastUpdated;
-        this.resultData = resultData;
+        this.lastupdate = lastupdate;
+        this.data = data;
     }
 }
