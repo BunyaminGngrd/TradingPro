@@ -75,14 +75,14 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
             futures.add(executor.submit(calculationTask));
         });
 
-        for (Future<StrategyResponse> future : futures) {
+        futures.forEach(future -> {
             try {
                 StrategyResponse strategyResponse = future.get();
                 strategyResponseList.add(strategyResponse);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        });
 
         executor.shutdown();
 
