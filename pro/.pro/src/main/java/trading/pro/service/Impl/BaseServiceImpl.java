@@ -34,4 +34,11 @@ public class BaseServiceImpl implements IBaseService {
         requestResponseType.setResponseMessage(responseMessage);
         return requestResponseType;
     }
+
+    @Override
+    public RequestResponseType createResponseMessage(String responseCode) {
+        RequestResponseType requestResponseType = new RequestResponseType();
+        requestResponseType.setResponseCode(responseCode);
+        return requestResponseType;
+    }
 }

@@ -11,4 +11,6 @@ public interface IBaseService {
     RequestResponseType createResponseMessage(String responseCode, String responseMessage, String response);
 
     RequestResponseType createResponseMessage(String responseCode, String responseMessage);
+
+    RequestResponseType createResponseMessage(String responseCode);
 }
