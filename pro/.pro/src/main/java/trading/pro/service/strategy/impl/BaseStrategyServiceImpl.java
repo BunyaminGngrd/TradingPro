@@ -2,6 +2,7 @@ package trading.pro.service.strategy.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.GnlEnumTypes.*;
 import trading.pro.common.LogPerformance;
 import trading.pro.dto.MacdCalculateResponse;
 import trading.pro.dto.RequestResponseType;
@@ -58,31 +59,19 @@ public class BaseStrategyServiceImpl implements IBaseStrategyService {
                 // Make buy or sell decision based on RSI, MACD, and EMA values
                 if (rsi < 30 && signalLine > macdLine && closingPrices.get(closingPrices.size() - 1) > emaValues.get(emaValues.size() - 1)) {
                     // Buy signal
-                    response.setResponseCode("200");
-                    response.setResponseMessage(stockCode + " BUY");
-                    response.setResponse("true");
-                    return response;
+                    return this.baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(),ResponseMessage.BUY.name(),Response.TRUE.name());
                 } else if (rsi > 70 && signalLine < macdLine && closingPrices.get(closingPrices.size() - 1) < emaValues.get(emaValues.size() - 1)) {
                     // Sell signal
-                    response.setResponseCode("200");
-                    response.setResponseMessage(stockCode + " SELL");
-                    response.setResponse("false");
-                    return response;
+                    return this.baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(),ResponseMessage.SELL.name(),Response.FALSE.name());
                 } else {
                     // No signal
-                    response.setResponseCode("500");
-                    response.setResponseMessage("NO SIGNAL");
-                    return response;
+                    return this.baseService.createResponseMessage(ResponseCode.ERROR.getValue(),ResponseMessage.NO_SIGNAL.name());
                 }
             } else {
-                response.setResponseCode("500");
-                response.setResponseMessage("There is not enough data to perform calculations: " + stockCode);
-                return response;
+                return this.baseService.createResponseMessage(ResponseCode.ERROR.getValue(),"There is not enough data to perform calculations: " + stockCode);
             }
         } catch (Exception e) {
-            response.setResponseCode("500");
-            response.setResponseMessage("An error occurred: " + e.getMessage());
-            return response;
+            return this.baseService.createResponseMessage(ResponseCode.ERROR.getValue(),"An error occurred: " + e.getMessage());
         }
     }
 }

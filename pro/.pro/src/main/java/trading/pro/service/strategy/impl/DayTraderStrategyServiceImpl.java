@@ -2,6 +2,7 @@ package trading.pro.service.strategy.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.GnlEnumTypes.*;
 import trading.pro.common.LogPerformance;
 import trading.pro.dto.DayTraderStrategyResponse;
 import trading.pro.dto.RequestResponseType;
@@ -13,6 +14,10 @@ import trading.pro.service.strategy.IDayTraderStrategy;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
@@ -35,9 +40,8 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
         return response;
     }
 
-    private List<StrategyResponse> getStrategyResponses() {
+    public List<StrategyResponse> getStrategyResponses() {
         List<StrategyResponse> strategyResponseList = new ArrayList<>();
-        StrategyResponse strategyResponse = new StrategyResponse();
 
         LocalDate today = LocalDate.now();
         int shortTermPeriod = 3;
@@ -45,22 +49,43 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
         int longTermPeriod = 9;
 
         List<String> distinctStockCodes = liveDataRepository.findAllDistinctCodes();
+
+        // ExecutorService oluştur
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        List<Future<StrategyResponse>> futures = new ArrayList<>();
         distinctStockCodes.forEach(stockCode -> {
-            RequestResponseType shortTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, shortTermPeriod, today.minusDays(shortTermPeriod).toString());
-            RequestResponseType middleTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, middleTermPeriod, today.minusDays(middleTermPeriod).toString());
-            RequestResponseType longTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, longTermPeriod, today.minusDays(longTermPeriod).toString());
+            Callable<StrategyResponse> calculationTask = () -> {
+                RequestResponseType shortTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, shortTermPeriod, today.minusDays(shortTermPeriod).toString());
+                RequestResponseType middleTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, middleTermPeriod, today.minusDays(middleTermPeriod).toString());
+                RequestResponseType longTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, longTermPeriod, today.minusDays(longTermPeriod).toString());
 
-            if (shortTermResponse.getResponseCode().equals("200") && middleTermResponse.getResponseCode().equals("200") && longTermResponse.getResponseCode().equals("200")){
-                strategyResponse.setStrategyResultMessage(shortTermResponse.getResponseMessage());
-                strategyResponse.setBuySignal(true);
-            } else {
-                strategyResponse.setStrategyResultMessage("NO SIGNAL");
-                strategyResponse.setBuySignal(false);
-            }
+                StrategyResponse strategyResponse = new StrategyResponse();
+                if (shortTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) && middleTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) && longTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue())) {
+                    strategyResponse.setStrategyResultMessage(shortTermResponse.getResponseMessage());
+                    strategyResponse.setBuySignal(true);
+                } else {
+                    strategyResponse.setStrategyResultMessage(ResponseMessage.NO_SIGNAL.name());
+                    strategyResponse.setBuySignal(false);
+                }
 
-            strategyResponse.setStockCode(stockCode);
-            strategyResponseList.add(strategyResponse);
+                strategyResponse.setStockCode(stockCode);
+                return strategyResponse;
+            };
+            futures.add(executor.submit(calculationTask));
         });
+
+        for (Future<StrategyResponse> future : futures) {
+            try {
+                StrategyResponse strategyResponse = future.get();
+                strategyResponseList.add(strategyResponse);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        executor.shutdown();
+
         return strategyResponseList;
     }
 }
