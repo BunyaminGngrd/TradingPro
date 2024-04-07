@@ -2,7 +2,8 @@ package trading.pro.service.strategy.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import trading.pro.common.GnlEnumTypes.*;
+import trading.pro.common.GnlEnumTypes.ResponseCode;
+import trading.pro.common.GnlEnumTypes.ResponseMessage;
 import trading.pro.common.LogPerformance;
 import trading.pro.dto.DayTraderStrategyResponse;
 import trading.pro.dto.RequestResponseType;
@@ -32,17 +33,17 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
         this.baseStrategyService = baseStrategyService;
     }
 
-    @LogPerformance
     @Override
+    @LogPerformance
     public DayTraderStrategyResponse calculateStrategy() {
         DayTraderStrategyResponse response = new DayTraderStrategyResponse();
-        response.setResponseList(getStrategyResponses());
+        List<StrategyResponse> strategyResponses = getStrategyResponses();
+        response.setResponseList(strategyResponses);
         return response;
     }
 
     public List<StrategyResponse> getStrategyResponses() {
         List<StrategyResponse> strategyResponseList = new ArrayList<>();
-
         LocalDate today = LocalDate.now();
         int shortTermPeriod = 3;
         int middleTermPeriod = 5;
@@ -61,7 +62,10 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
                 RequestResponseType longTermResponse = baseStrategyService.calculationOfEmaMacdAndRsiCombination(stockCode, longTermPeriod, today.minusDays(longTermPeriod).toString());
 
                 StrategyResponse strategyResponse = new StrategyResponse();
-                if (shortTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) && middleTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) && longTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue())) {
+                if (shortTermResponse != null && middleTermResponse != null && longTermResponse != null &&
+                        shortTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) &&
+                        middleTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue()) &&
+                        longTermResponse.getResponseCode().equals(ResponseCode.SUCCESS.getValue())) {
                     strategyResponse.setStrategyResultMessage(shortTermResponse.getResponseMessage());
                     strategyResponse.setBuySignal(true);
                 } else {
