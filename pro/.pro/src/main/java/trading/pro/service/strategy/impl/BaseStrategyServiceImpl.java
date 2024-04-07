@@ -37,7 +37,6 @@ public class BaseStrategyServiceImpl implements IBaseStrategyService {
         this.baseService = baseService;
     }
 
-    @LogPerformance
     @Override
     public RequestResponseType calculationOfEmaMacdAndRsiCombination(String stockCode, int period, String startDate) {
         RequestResponseType response = new RequestResponseType();

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 public class BaseServiceImpl implements IBaseService {
-    @LogPerformance
     @Override
     public List<Float> extractClosingPrices(List<LiveDataEntity> stockData) {
         List<Float> closingPrices = new ArrayList<>();

@@ -27,7 +27,6 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
         this.baseService = baseService;
     }
 
-    @LogPerformance
     @Override
     public MacdCalculateResponse calculateMACD(String stockCode, int period, String startDate) {
         // Veritabanından verileri çek

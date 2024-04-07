@@ -20,7 +20,6 @@ public class RsiCalculatorServiceImpl implements IRsiCalculatorService {
         this.liveDataRepository = liveDataRepository;
     }
 
-    @LogPerformance
     @Override
     public Double calculateRsiForStock(String stockCode, int period, String startDate) {
         List<LiveDataEntity> stockData = liveDataRepository.findByCodeAndDateAfter(stockCode, startDate);
