@@ -25,31 +25,30 @@ public class RsiCalculatorServiceImpl implements IRsiCalculatorService {
         List<LiveDataEntity> stockData = liveDataRepository.findByCodeAndDateAfter(stockCode, startDate);
 
         if (stockData.size() < period) {
-            // Hesaplama yapmak için yeterli veri yok.
-            return null;
+            return null; // Hesaplama yapmak için yeterli veri yok.
         }
 
         List<Double> priceChanges = new ArrayList<>();
-
         for (int i = 1; i < stockData.size(); i++) {
-            Double priceChange = (double) (stockData.get(i).getLastPrice() - stockData.get(i - 1).getLastPrice());
+            double priceChange = stockData.get(i).getLastPrice() - stockData.get(i - 1).getLastPrice();
             priceChanges.add(priceChange);
         }
 
-        List<Double> positiveChanges = priceChanges.stream().filter(change -> change > 0).toList();
-        List<Double> negativeChanges = priceChanges.stream().filter(change -> change < 0).map(Math::abs).toList();
-
-        double averageGain = positiveChanges.stream()
+        double sumOfGains = priceChanges.stream()
+                .filter(change -> change > 0)
                 .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(0.0);
+                .sum();
 
-        double averageLoss = negativeChanges.stream()
-                .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(0.0);
+        double sumOfLosses = priceChanges.stream()
+                .filter(change -> change < 0)
+                .mapToDouble(change -> Math.abs(change))
+                .sum();
 
-        double rs = (averageGain == 0) ? 0 : (averageGain / averageLoss);
+        double avgGain = sumOfGains / period;
+        double avgLoss = sumOfLosses / period;
+
+        double rs = (avgLoss == 0) ? Double.POSITIVE_INFINITY : avgGain / avgLoss;
+
         return 100 - (100 / (1 + rs));
     }
 }

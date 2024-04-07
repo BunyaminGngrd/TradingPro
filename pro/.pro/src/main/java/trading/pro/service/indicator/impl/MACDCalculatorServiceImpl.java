@@ -29,18 +29,17 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
 
     @Override
     public MacdCalculateResponse calculateMACD(String stockCode, int period, String startDate) {
-        // Veritabanından verileri çek
         List<LiveDataEntity> stockData = liveDataRepository.findByCodeAndDateAfter(stockCode, startDate);
 
         if (stockData.size() < period) {
-            // Hesaplama yapmak için yeterli veri yok.
             return null;
         }
 
-        // Fiyatları içeren liste
-        List<Float> closingPrices = this.baseService.extractClosingPrices(stockData);
+        List<Float> closingPrices = new ArrayList<>(stockData.size());
+        for (LiveDataEntity entity : stockData) {
+            closingPrices.add(entity.getLastPrice());
+        }
 
-        // MACD hesapla
         return macdCalculator(closingPrices);
     }
 
@@ -50,19 +49,18 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
         int longTermPeriod = 26;
         int signalPeriod = 9;
 
+        // Kapanış fiyatlarından kısa ve uzun vadeli EMA'ları hesapla
         List<Float> shortTermEMA = this.emaCalculatorService.calculateEMA(closingPrices, shortTermPeriod);
         List<Float> longTermEMA = this.emaCalculatorService.calculateEMA(closingPrices, longTermPeriod);
 
-        List<Float> macdLine = new ArrayList<>();
-        List<Float> signalLine = new ArrayList<>();
-
         // MACD hattı hesapla
-        for (int i = 0; i < closingPrices.size(); i++) {
+        List<Float> macdLine = new ArrayList<>();
+        for (int i = 0; i < shortTermEMA.size(); i++) {
             macdLine.add(shortTermEMA.get(i) - longTermEMA.get(i));
         }
 
         // Sinyal hattı hesapla
-        signalLine = this.emaCalculatorService.calculateEMA(macdLine.subList(longTermPeriod - 1, macdLine.size()), signalPeriod);
+        List<Float> signalLine = this.emaCalculatorService.calculateEMA(macdLine.subList(longTermPeriod - 1, macdLine.size()), signalPeriod);
 
         // Histogram hesapla
         List<Float> histogram = new ArrayList<>();

@@ -14,13 +14,14 @@ public class EMACalculatorServiceImpl implements IEMACalculatorService {
         List<Float> emaValues = new ArrayList<>();
         float multiplier = 2.0f / (period + 1);
 
-        // İlk EMA değeri, ilk veri değeri ile aynıdır
         emaValues.add(values.get(0));
 
-        // EMA hesapla
+        float diff = values.get(1) - emaValues.get(0);
+
         for (int i = 1; i < values.size(); i++) {
-            float ema = (values.get(i) - emaValues.get(i - 1)) * multiplier + emaValues.get(i - 1);
+            float ema = emaValues.get(i - 1) + multiplier * diff;
             emaValues.add(ema);
+            diff = values.get(i) - ema;
         }
 
         return emaValues;
