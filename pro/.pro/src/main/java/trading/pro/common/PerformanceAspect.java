@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import trading.pro.entity.GnlExtLogPerformanceEntity;
 import trading.pro.repository.GnlExtLogPerformanceRepository;
 
+import java.util.Date;
+
 @Aspect
 @Component
 public class PerformanceAspect {
@@ -30,9 +32,9 @@ public class PerformanceAspect {
         GnlExtLogPerformanceEntity entity = new GnlExtLogPerformanceEntity();
         long endTime = System.currentTimeMillis();
 
-        entity.setStartTime(startTime);
-        entity.setEndTime(endTime);
-        entity.setExecutionTime(endTime - startTime);
+        entity.setStartTime(new Date(startTime));
+        entity.setEndTime(new Date(endTime));
+        entity.setExecutionTime((endTime - startTime) / 60);
         entity.setOperName(joinPoint.getSignature().getName());
 
         gnlExtLogPerformanceRepository.save(entity);

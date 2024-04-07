@@ -3,6 +3,8 @@ package trading.pro.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "gnl_ext_log_performance")
@@ -16,10 +18,10 @@ public class GnlExtLogPerformanceEntity {
     private String operName;
 
     @Column(name = "start_time")
-    private long startTime;
+    private Date startTime;
 
     @Column(name = "end_time")
-    private long endTime;
+    private Date endTime;
 
     @Column(name = "execution_time")
     private long executionTime;
