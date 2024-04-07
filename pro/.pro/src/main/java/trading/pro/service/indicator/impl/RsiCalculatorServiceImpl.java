@@ -2,6 +2,7 @@ package trading.pro.service.indicator.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.repository.LiveDataRepository;
 import trading.pro.service.indicator.IRsiCalculatorService;
@@ -19,6 +20,7 @@ public class RsiCalculatorServiceImpl implements IRsiCalculatorService {
         this.liveDataRepository = liveDataRepository;
     }
 
+    @LogPerformance
     @Override
     public Double calculateRsiForStock(String stockCode, int period, String startDate) {
         List<LiveDataEntity> stockData = liveDataRepository.findByCodeAndDateAfter(stockCode, startDate);

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.LiveDataResponseDTO;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.service.ICollectAPIService;
@@ -22,6 +23,7 @@ public class CollectAPIController {
         this.collectAPIService = collectAPIService;
     }
 
+    @LogPerformance
     @GetMapping("/livedata")
     public ResponseEntity<LiveDataResponseDTO> getAllData() {
         try {
@@ -32,6 +34,7 @@ public class CollectAPIController {
         }
     }
 
+    @LogPerformance
     @GetMapping("/livedata/{code}")
     public ResponseEntity<LiveDataEntity> findByData(@PathVariable String code) {
         try {

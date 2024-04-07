@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.*;
 import trading.pro.service.ICurrencyToAllService;
 
@@ -17,6 +18,7 @@ public class CurrencyToAllController {
         this.currencyToAllService = currencyToAllService;
     }
 
+    @LogPerformance
     @PostMapping("/all")
     public ResponseEntity<CurrencyToAllResponseDTO> currencyToAll(@RequestBody CurrencyToAllRequest currencyToAllRequest) {
         try {
@@ -27,6 +29,7 @@ public class CurrencyToAllController {
         }
     }
 
+    @LogPerformance
     @PostMapping("/desired")
     public ResponseEntity<ConvertToDesiredCurrencyResponse> currencyToDesired(@RequestBody ConvertToDesiredCurrencyRequest convertToDesiredCurrencyRequest) {
         try {
@@ -37,6 +40,7 @@ public class CurrencyToAllController {
         }
     }
 
+    @LogPerformance
     @GetMapping("/allCurrency")
     public ResponseEntity<AllCurrencyResponse> currencyToDesired() {
         try {

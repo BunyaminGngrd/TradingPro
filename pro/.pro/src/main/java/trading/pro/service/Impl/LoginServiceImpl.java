@@ -3,6 +3,7 @@ package trading.pro.service.Impl;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.LoginRequest;
 import trading.pro.dto.SignUpRequest;
 import trading.pro.entity.UserEntity;
@@ -25,6 +26,7 @@ public class LoginServiceImpl implements ILoginService {
         this.userRepository = userRepository;
     }
 
+    @LogPerformance
     @Override
     public Long login(LoginRequest loginRequest) {
         try {
@@ -43,6 +45,7 @@ public class LoginServiceImpl implements ILoginService {
         return null;
     }
 
+    @LogPerformance
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         try {
@@ -51,18 +54,16 @@ public class LoginServiceImpl implements ILoginService {
                 if (userRepository.findByMail(signUpRequest.getMail()) != null) {
                     throw new RuntimeException("Aynı e-posta adresine sahip kullanıcı zaten mevcut");
                 }
-    
+
                 LocalDateTime now = LocalDateTime.now();
                 String formattedDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 UserEntity user = this.userMapper.fromSignUpRequest(signUpRequest);
                 user.setActivationDate(formattedDate);
-                
+
                 this.userRepository.save(user);
             }
         } catch (Exception ex) {
             throw new RuntimeException("LoginServiceImpl.signUp.HATA: " + ex.getMessage());
         }
     }
-    
-    
 }

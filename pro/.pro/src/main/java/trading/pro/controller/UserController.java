@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.LoginRequest;
 import trading.pro.dto.SignUpRequest;
 import trading.pro.service.ILoginService;
@@ -23,6 +24,7 @@ public class UserController {
         this.loginService = loginService;
     }
 
+    @LogPerformance
     @PostMapping("/login")
     public ResponseEntity<Long> login(@RequestBody LoginRequest loginRequest) {
         try {
@@ -33,6 +35,7 @@ public class UserController {
         }
     }
 
+    @LogPerformance
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest) {
         try {

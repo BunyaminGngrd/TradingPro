@@ -2,6 +2,7 @@ package trading.pro.service.strategy.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.MacdCalculateResponse;
 import trading.pro.dto.RequestResponseType;
 import trading.pro.repository.LiveDataRepository;
@@ -35,7 +36,7 @@ public class BaseStrategyServiceImpl implements IBaseStrategyService {
         this.baseService = baseService;
     }
 
-
+    @LogPerformance
     @Override
     public RequestResponseType calculationOfEmaMacdAndRsiCombination(String stockCode, int period, String startDate) {
         RequestResponseType response = new RequestResponseType();

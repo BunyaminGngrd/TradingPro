@@ -1,6 +1,7 @@
 package trading.pro.service.indicator.impl;
 
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.service.indicator.IEMACalculatorService;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Service
 public class EMACalculatorServiceImpl implements IEMACalculatorService {
+    @LogPerformance
     @Override
     public List<Float> calculateEMA(List<Float> values, int period) {
         List<Float> emaValues = new ArrayList<>();

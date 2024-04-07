@@ -2,6 +2,7 @@ package trading.pro.service.strategy.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.DayTraderStrategyResponse;
 import trading.pro.dto.RequestResponseType;
 import trading.pro.dto.StrategyResponse;
@@ -26,6 +27,7 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
         this.baseStrategyService = baseStrategyService;
     }
 
+    @LogPerformance
     @Override
     public DayTraderStrategyResponse calculateStrategy() {
         DayTraderStrategyResponse response = new DayTraderStrategyResponse();

@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.LiveDataResponseDTO;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.mapper.LiveDataMapper;
@@ -29,6 +30,7 @@ public class CollectAPIServiceImpl implements ICollectAPIService {
         this.liveDataRepository = liveDataRepository;
     }
 
+    @LogPerformance
     @Override
     public LiveDataResponseDTO getAllData() {
         ObjectMapper objectMapper = new ObjectMapper();

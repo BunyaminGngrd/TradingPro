@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.*;
 import trading.pro.mapper.CurrencyToAllToConvertToDesiredCurrency;
 import trading.pro.service.ICurrencyToAllService;
@@ -27,6 +28,7 @@ public class CurrencyToAllServiceImpl implements ICurrencyToAllService {
         this.apiKey = apiKey;
     }
 
+    @LogPerformance
     @Override
     public CurrencyToAllResponseDTO currencyToAll(CurrencyToAllRequest currencyToAllRequest) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -49,6 +51,7 @@ public class CurrencyToAllServiceImpl implements ICurrencyToAllService {
         }
     }
 
+    @LogPerformance
     @Override
     public ConvertToDesiredCurrencyResponse convertToDesiredCurrency(ConvertToDesiredCurrencyRequest convertToDesiredCurrencyRequest) {
         try {
@@ -75,6 +78,7 @@ public class CurrencyToAllServiceImpl implements ICurrencyToAllService {
         return null;
     }
 
+    @LogPerformance
     @Override
     public AllCurrencyResponse allCurrency() {
         ObjectMapper objectMapper = new ObjectMapper();

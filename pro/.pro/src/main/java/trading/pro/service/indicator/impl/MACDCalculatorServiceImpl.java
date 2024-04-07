@@ -2,6 +2,7 @@ package trading.pro.service.indicator.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.LogPerformance;
 import trading.pro.dto.MacdCalculateResponse;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.repository.LiveDataRepository;
@@ -26,6 +27,7 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
         this.baseService = baseService;
     }
 
+    @LogPerformance
     @Override
     public MacdCalculateResponse calculateMACD(String stockCode, int period, String startDate) {
         // Veritabanından verileri çek
