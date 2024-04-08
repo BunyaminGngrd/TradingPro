@@ -1,3 +1,13 @@
 api:
     key:
-        myApiKey: apikey 3aubWtXBMQU9H3AgxCsdKm:6t9g3uGKzsBKAS7n2TcRkb
+        myApiKey: apikey 3aubWtXBMQU9H3AgxCsdKm:6t9g3uGKzsBKAS7n2TcRkb;
+
+scheduledSave:
+    strategy:
+        api:
+            url: http://localhost:8080/strategy/trader/day/save;
+
+scheduledDelete:
+    strategy:
+        api:
+            url: http://localhost:8080/strategy/trader/day/delete;

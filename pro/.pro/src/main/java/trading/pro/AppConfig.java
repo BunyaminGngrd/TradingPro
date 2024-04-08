@@ -14,4 +14,20 @@ public class AppConfig {
     public String apiKey() {
         return apiKey;
     }
+
+    @Value("${scheduledSave.strategy.api.url}")
+    private String strategySaveApiUrl;
+
+    @Bean
+    public String strategySaveApiUrl() {
+        return strategySaveApiUrl;
+    }
+
+    @Value("${scheduledDelete.strategy.api.url}")
+    private String strategyDeleteApiUrl;
+
+    @Bean
+    public String strategyDeleteApiUrl() {
+        return strategyDeleteApiUrl;
+    }
 }

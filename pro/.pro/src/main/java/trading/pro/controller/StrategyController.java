@@ -23,11 +23,31 @@ public class StrategyController {
 
     @LogPerformance
     @GetMapping("/trader/day")
-    public ResponseEntity<DayTraderStrategyResponse> currencyToAll() {
+    public ResponseEntity<DayTraderStrategyResponse> dayTraderStrategy() {
         try {
             return ResponseEntity.ok(dayTraderStrategy.calculateStrategy());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @LogPerformance
+    @GetMapping("/trader/day/save")
+    public void saveDayTraderStrategyJob() {
+        try {
+            dayTraderStrategy.saveCalculateStrategy();
+        } catch (Exception e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @LogPerformance
+    @GetMapping("/trader/day/delete")
+    public void deleteDayTraderStrategyJob() {
+        try {
+            dayTraderStrategy.deleteCalculateStrategy();
+        } catch (Exception e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

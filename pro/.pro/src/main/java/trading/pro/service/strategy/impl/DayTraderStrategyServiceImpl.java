@@ -1,5 +1,6 @@
 package trading.pro.service.strategy.impl;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import trading.pro.common.GnlEnumTypes.ResponseCode;
@@ -8,12 +9,16 @@ import trading.pro.common.LogPerformance;
 import trading.pro.dto.DayTraderStrategyResponse;
 import trading.pro.dto.RequestResponseType;
 import trading.pro.dto.StrategyResponse;
+import trading.pro.entity.StrategyResponseEntity;
+import trading.pro.mapper.StrategyResponseMapper;
 import trading.pro.repository.LiveDataRepository;
+import trading.pro.repository.StrategyResponseRepository;
 import trading.pro.service.strategy.IBaseStrategyService;
 import trading.pro.service.strategy.IDayTraderStrategy;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -25,21 +30,36 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
 
     private final LiveDataRepository liveDataRepository;
     private final IBaseStrategyService baseStrategyService;
+    private final StrategyResponseRepository strategyResponseRepository;
+    private final StrategyResponseMapper mapper = Mappers.getMapper(StrategyResponseMapper.class);
 
     @Autowired
     public DayTraderStrategyServiceImpl(LiveDataRepository liveDataRepository,
-                                        IBaseStrategyService baseStrategyService) {
+                                        IBaseStrategyService baseStrategyService,
+                                        StrategyResponseRepository strategyResponseRepository) {
         this.liveDataRepository = liveDataRepository;
         this.baseStrategyService = baseStrategyService;
+        this.strategyResponseRepository = strategyResponseRepository;
     }
 
     @Override
     @LogPerformance
     public DayTraderStrategyResponse calculateStrategy() {
         DayTraderStrategyResponse response = new DayTraderStrategyResponse();
-        List<StrategyResponse> strategyResponses = getStrategyResponses();
-        response.setResponseList(strategyResponses);
+        List<StrategyResponseEntity> allData = strategyResponseRepository.findAll();
+        response.setResponseList(this.mapper.toStrategyResponseList(allData));
         return response;
+    }
+
+    @Override
+    public void saveCalculateStrategy() {
+        List<StrategyResponse> strategyResponses = getStrategyResponses();
+        this.saveStrategyResponse(strategyResponses);
+    }
+
+    @Override
+    public void deleteCalculateStrategy() {
+        strategyResponseRepository.deleteAll();
     }
 
     public List<StrategyResponse> getStrategyResponses() {
@@ -91,5 +111,16 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
         executor.shutdown();
 
         return strategyResponseList;
+    }
+
+    private void saveStrategyResponse(List<StrategyResponse> strategyResponses) {
+        StrategyResponseEntity entity = new StrategyResponseEntity();
+        strategyResponses.forEach(strategyResponse -> {
+            entity.setDate(new Date(System.currentTimeMillis()));
+            entity.setStockCode(strategyResponse.getStockCode());
+            entity.setStrategyResultMessage(strategyResponse.getStrategyResultMessage());
+            entity.setBuySignal(strategyResponse.getBuySignal());
+            this.strategyResponseRepository.save(entity);
+        });
     }
 }
