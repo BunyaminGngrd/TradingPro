@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import trading.pro.dto.StrategyResponse;
 import trading.pro.entity.StrategyResponseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -18,4 +19,13 @@ public interface StrategyResponseMapper {
     StrategyResponse toStrategyResponse(StrategyResponseEntity strategyResponseEntity);
 
     List<StrategyResponse> toStrategyResponseList(List<StrategyResponseEntity> strategyResponseEntityList);
+
+    @Mappings({
+            @Mapping(target = "date", qualifiedByName = "toDate")
+    })
+    List<StrategyResponseEntity> toStrategyResponseEntity(List<StrategyResponse> strategyResponseList);
+
+    default Date toDate() {
+        return new Date(System.currentTimeMillis());
+    }
 }

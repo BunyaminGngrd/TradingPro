@@ -39,7 +39,6 @@ public class BaseStrategyServiceImpl implements IBaseStrategyService {
 
     @Override
     public RequestResponseType calculationOfEmaMacdAndRsiCombination(String stockCode, int period, String startDate) {
-        RequestResponseType response = new RequestResponseType();
         try {
             // Calculate RSI
             Double rsi = this.rsiCalculatorService.calculateRsiForStock(stockCode, period, startDate);

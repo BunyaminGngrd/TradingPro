@@ -11,16 +11,21 @@ public class ScheduledJob {
     private RestTemplate restTemplate;
     private final String strategySaveApiUrl;
     private final String strategyDeleteApiUrl;
+    private final String liveDataApiUrl;
 
     @Autowired
-    public ScheduledJob(String strategySaveApiUrl, String strategyDeleteApiUrl) {
+    public ScheduledJob(String strategySaveApiUrl,
+                        String strategyDeleteApiUrl,
+                        String liveDataApiUrl) {
         this.strategySaveApiUrl = strategySaveApiUrl;
         this.strategyDeleteApiUrl = strategyDeleteApiUrl;
+        this.liveDataApiUrl = liveDataApiUrl;
     }
 
     @Scheduled(cron = "0 0 7 * * ?") // Her gün saat 07:00'de çalışır
     public void triggerStrategyApi() {
         try {
+            restTemplate.getForObject(liveDataApiUrl, Void.class);
             restTemplate.getForObject(strategyDeleteApiUrl, Void.class);
             restTemplate.getForObject(strategySaveApiUrl, Void.class);
         } catch (Exception e) {

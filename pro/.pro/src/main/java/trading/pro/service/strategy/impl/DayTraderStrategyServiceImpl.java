@@ -114,13 +114,7 @@ public class DayTraderStrategyServiceImpl implements IDayTraderStrategy {
     }
 
     private void saveStrategyResponse(List<StrategyResponse> strategyResponses) {
-        StrategyResponseEntity entity = new StrategyResponseEntity();
-        strategyResponses.forEach(strategyResponse -> {
-            entity.setDate(new Date(System.currentTimeMillis()));
-            entity.setStockCode(strategyResponse.getStockCode());
-            entity.setStrategyResultMessage(strategyResponse.getStrategyResultMessage());
-            entity.setBuySignal(strategyResponse.getBuySignal());
-            this.strategyResponseRepository.save(entity);
-        });
+        List<StrategyResponseEntity> strategyResponseEntity = this.mapper.toStrategyResponseEntity(strategyResponses);
+        this.strategyResponseRepository.saveAll(strategyResponseEntity);
     }
 }

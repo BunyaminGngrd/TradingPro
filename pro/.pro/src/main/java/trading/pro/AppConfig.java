@@ -30,4 +30,12 @@ public class AppConfig {
     public String strategyDeleteApiUrl() {
         return strategyDeleteApiUrl;
     }
+
+    @Value("${livedata.api.url}")
+    private String liveDataApiUrl;
+
+    @Bean
+    public String liveDataApiUrl() {
+        return liveDataApiUrl;
+    }
 }
