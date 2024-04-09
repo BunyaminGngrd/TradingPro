@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ScheduledJob {
 
+    @Autowired
     private RestTemplate restTemplate;
     private final String strategySaveApiUrl;
     private final String strategyDeleteApiUrl;
@@ -28,6 +29,7 @@ public class ScheduledJob {
             restTemplate.getForObject(liveDataApiUrl, Void.class);
             restTemplate.getForObject(strategyDeleteApiUrl, Void.class);
             restTemplate.getForObject(strategySaveApiUrl, Void.class);
+            System.out.println("Scheduled job başarılı.");
         } catch (Exception e) {
             System.err.println("Scheduled job tetiklenirken bir hata oluştu: " + e.getMessage());
         }
