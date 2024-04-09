@@ -2,9 +2,13 @@ package trading.pro.service.indicator.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.GnlEnumTypes.*;
 import trading.pro.common.LogPerformance;
+import trading.pro.dto.IndicatorRequestDTO;
+import trading.pro.dto.RequestResponseType;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.repository.LiveDataRepository;
+import trading.pro.service.IBaseService;
 import trading.pro.service.indicator.IRsiCalculatorService;
 
 import java.util.ArrayList;
@@ -14,10 +18,31 @@ import java.util.List;
 public class RsiCalculatorServiceImpl implements IRsiCalculatorService {
 
     private final LiveDataRepository liveDataRepository;
+    private final IBaseService baseService;
 
     @Autowired
-    public RsiCalculatorServiceImpl(LiveDataRepository liveDataRepository) {
+    public RsiCalculatorServiceImpl(LiveDataRepository liveDataRepository,
+                                    IBaseService baseService) {
         this.liveDataRepository = liveDataRepository;
+        this.baseService = baseService;
+    }
+
+    @Override
+    @LogPerformance
+    public RequestResponseType rsiSignal(IndicatorRequestDTO indicatorRequestDTO) {
+        try {
+            Double rsi = calculateRsiForStock(indicatorRequestDTO.getStockCode(), indicatorRequestDTO.getPeriod(), indicatorRequestDTO.getStartDate());
+
+            if (rsi < 30) {
+                return baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(), ResponseMessage.BUY.name());
+            } else if (rsi < 70) {
+                return baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(), ResponseMessage.SELL.name());
+            } else {
+                return baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(), ResponseMessage.NO_SIGNAL.name());
+            }
+        } catch (Exception e) {
+            return baseService.createResponseMessage(ResponseCode.ERROR.getValue(), e.getMessage());
+        }
     }
 
     @Override

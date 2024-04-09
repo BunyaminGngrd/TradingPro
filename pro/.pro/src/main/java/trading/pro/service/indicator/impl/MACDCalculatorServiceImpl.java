@@ -2,8 +2,11 @@ package trading.pro.service.indicator.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import trading.pro.common.GnlEnumTypes.*;
 import trading.pro.common.LogPerformance;
+import trading.pro.dto.IndicatorRequestDTO;
 import trading.pro.dto.MacdCalculateResponse;
+import trading.pro.dto.RequestResponseType;
 import trading.pro.entity.LiveDataEntity;
 import trading.pro.repository.LiveDataRepository;
 import trading.pro.service.IBaseService;
@@ -25,6 +28,20 @@ public class MACDCalculatorServiceImpl implements IMACDCalculatorService {
         this.liveDataRepository = liveDataRepository;
         this.emaCalculatorService = emaCalculatorService;
         this.baseService = baseService;
+    }
+
+    @Override
+    @LogPerformance
+    public RequestResponseType macdSignal(IndicatorRequestDTO indicatorRequestDTO) {
+        MacdCalculateResponse response = calculateMACD(indicatorRequestDTO.getStockCode(), indicatorRequestDTO.getPeriod(), indicatorRequestDTO.getStartDate());
+
+        float signalLine = response.getSignalLine().get(response.getSignalLine().size() - 1);
+        float macdLine = response.getMacdLine().get(response.getMacdLine().size() - 1);
+
+        if (signalLine > macdLine) {
+            return baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(), ResponseMessage.BUY.name());
+        }
+        return baseService.createResponseMessage(ResponseCode.SUCCESS.getValue(), ResponseMessage.SELL.name());
     }
 
     @Override

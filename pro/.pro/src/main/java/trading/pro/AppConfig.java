@@ -11,29 +11,29 @@ public class AppConfig {
     @Value("${api.key.myApiKey}")
     private String apiKey;
 
+    @Value("${livedata.api.url}")
+    private String liveDataApiUrl;
+
+    @Value("${scheduledDelete.strategy.api.url}")
+    private String strategyDeleteApiUrl;
+
+    @Value("${scheduledSave.strategy.api.url}")
+    private String strategySaveApiUrl;
+
     @Bean
     public String apiKey() {
         return apiKey;
     }
-
-    @Value("${scheduledSave.strategy.api.url}")
-    private String strategySaveApiUrl;
 
     @Bean
     public String strategySaveApiUrl() {
         return strategySaveApiUrl;
     }
 
-    @Value("${scheduledDelete.strategy.api.url}")
-    private String strategyDeleteApiUrl;
-
     @Bean
     public String strategyDeleteApiUrl() {
         return strategyDeleteApiUrl;
     }
-
-    @Value("${livedata.api.url}")
-    private String liveDataApiUrl;
 
     @Bean
     public String liveDataApiUrl() {
